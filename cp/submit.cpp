@@ -9,7 +9,6 @@ template <class c, class cmp = less<c> >
 using ordered_set = tree<c, null_type, cmp, rb_tree_tag, tree_order_statistics_node_update>;
 
 #define ll  long long int
-#define ld  long double
 #define vi  vector<ll>
 #define vs  vector<string>
 #define vb  vector<bool>
@@ -54,9 +53,30 @@ ll divide(ll a, ll b, ll p=mod) {
 
 
 void solve(){
-    ll n ;
-    cin >> n ;
-
+    ll n, m, k;
+    cin >> n >> m >> k ;
+    
+    multiset<ll> s ;
+    vi room(m) ;
+    for(ll i=0; i<n; i++){
+        ll x ;
+        cin >> x ;
+        s.insert(x) ;
+    }
+    
+    for(ll i=0; i<n; i++)
+        cin >> room[i] ;
+        
+    ll cnt=0 ;
+    for(ll i=0; i<m; i++){
+        auto it = s.lower_bound(room[i]) ;
+        if(room[i]<=*it+k && room[i]>=*it-k){
+            cnt++ ;
+            s.erase(it) ;
+        }
+    }   
+    
+    cout << cnt << endl ;
     return ;
 }
 
@@ -66,7 +86,7 @@ signed main(){
     cout.tie(0) ;
 
     ll t=1;
-    cin >> t ;
+    // cin >> t ;
 
     while(t--)
         solve() ;

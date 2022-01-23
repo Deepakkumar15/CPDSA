@@ -51,12 +51,40 @@ ll divide(ll a, ll b, ll p=mod) {
   return multiply(a % p, power(b, p - 2, p), p);
 }
 
+unordered_map<ll, vi> adj ;
+bool flag = false ;
 
+void dfs(ll src, ll dest, ll par){
+    if(src == dest){
+        flag = true ;
+        return ;
+    }
+    for(auto it : adj[src])
+        if(it!=par)
+            dfs(it, dest, src) ;
+}
 
 void solve(){
     ll n ;
     cin >> n ;
-
+    for(ll i=0; i<n; i++){
+        ll x ;
+        cin >> x ;
+    }
+    
+    ll m ;
+    cin >> m ;
+    while(m--){
+        ll x, y ;
+        cin >> x >> y ;
+        adj[x].pb(y) ;
+    }
+    
+    ll src, dest ;
+    cin >> src >> dest ;
+    
+    dfs(src, dest, -1) ;
+    flag ? cout << 1 : cout << 0 ;
     return ;
 }
 
@@ -66,7 +94,7 @@ signed main(){
     cout.tie(0) ;
 
     ll t=1;
-    cin >> t ;
+    // cin >> t ;
 
     while(t--)
         solve() ;

@@ -7,16 +7,14 @@ using namespace std ;
 #define MAX 1000005
 #define ll long long
 
-void prime(int *a, int n){
-	for(int i=3; i<n; i+=2)
-		a[i]=1 ;
-	for(int i=3; i<n; i+=2)
-		if(a[i]==1)
-			for(ll j=i*i; j<=n; j+=i)
-				a[j]=0 ;
-    a[2]=1 ;				
-// 	a[0]=a[1]=0 ;		
-}
+int prime [n+1];
+for(int i=2;i<=n;i++)
+	if(prime[i] == 0)
+		for(int j=2*i;j<=n;j+=i)
+			prime[j] = i;
+
+
+// prime[i] = 0 => i is prime
 
 int main(){
 	int n ;

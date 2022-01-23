@@ -1,3 +1,5 @@
+// EDUCATIONAL 121 DIV-2 C
+
 #include <bits/stdc++.h>
  
 using namespace std ;
@@ -56,7 +58,41 @@ ll divide(ll a, ll b, ll p=mod) {
 void solve(){
     ll n ;
     cin >> n ;
-
+    vi k(n), h(n) ;
+    for(ll i=0; i<n; i++)
+        cin >> k[i] ;
+    for(ll i=0; i<n; i++)
+        cin >> h[i] ;
+    
+    vpi intervals ;
+    for(ll i=0; i<n; i++){
+        intervals.pb({k[i]-h[i]+1, k[i]}) ;
+    }
+    
+    ll index = 0 ;
+    
+    sort(intervals.begin(), intervals.end()) ;
+    for(ll i=1; i<n; i++){
+        if(intervals[index].ss < intervals[i].ff){ // no merging occurs 
+            index++ ;
+            intervals[index] = intervals[i] ;
+        }
+        
+        else // merging occurs here
+            intervals[index].ss = max(intervals[index].ss, intervals[i].ss) ;
+        
+    }
+    
+    intervals.resize(index+1) ;
+    ll sz = intervals.size() ;
+    
+    ll ans=0 ;
+    for(ll i=0; i<sz; i++){
+        ll t = intervals[i].ss - intervals[i].ff + 1;
+        ans += (t*(t+1))/2 ;
+    }
+    
+    cout << ans << "\n" ;
     return ;
 }
 

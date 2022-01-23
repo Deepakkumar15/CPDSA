@@ -1,3 +1,5 @@
+//cf 764 div3 -> D
+
 #include <bits/stdc++.h>
  
 using namespace std ;
@@ -54,9 +56,30 @@ ll divide(ll a, ll b, ll p=mod) {
 
 
 void solve(){
-    ll n ;
-    cin >> n ;
-
+    ll n, k;
+    cin >> n >> k;
+    string s ;
+    cin >> s ;
+    ll a[26] = {0} ;
+    for(ll i=0; i<n; i++)
+        a[s[i]-'a']++ ;
+        
+    ll db=0, sng=0;
+    for(ll i=0; i<26; i++){
+        db += (a[i]/2) ;
+        sng += (a[i]&1) ;
+    }
+        
+    // cout << db << " " << sng << endl ;
+    ll ans=1 ;
+    if(k <= db){
+        ans = 2*(db/k) ;
+        sng += 2*(db%k) ;
+        if(sng >= k)
+            ans++ ;
+    }
+    
+    cout << ans << "\n" ;
     return ;
 }
 

@@ -9,7 +9,6 @@ template <class c, class cmp = less<c> >
 using ordered_set = tree<c, null_type, cmp, rb_tree_tag, tree_order_statistics_node_update>;
 
 #define ll  long long int
-#define ld  long double
 #define vi  vector<ll>
 #define vs  vector<string>
 #define vb  vector<bool>
@@ -52,11 +51,61 @@ ll divide(ll a, ll b, ll p=mod) {
 }
 
 
+bool check(vi &h, ll mid){
+    ll n = h.size() ;
+    vi add(n, 0) ;
+    vi final_val(n, 0) ;
+    for(ll i=n-1; i>1; i--){
+        if(h[i] + add[i] >= mid){
+            ll d = min(h[i]/3, (h[i]+add[i]-mid)/3) ;
+            final_val[i] = h[i] - (3*d) + add[i] ;
+            add[i-1] += d ;
+            add[i-2] += 2*d ;
+        }
+        
+        else
+            return false ;
+    }
+    
+    final_val[1] = h[1]+add[1] ;
+    final_val[0] = h[0]+add[0] ;
+    
+    for(ll i=0; i<n; i++)
+        if(final_val[i] < mid)
+            return false ;
+    return true ;
+}
 
 void solve(){
     ll n ;
     cin >> n ;
-
+    vi h(n) ;
+    ll sum=0 ;
+    for(ll i=0; i<n; i++){
+        cin >> h[i] ;
+        sum+=h[i] ;
+    }
+    
+    if(h[n-1] == 1){
+        cout << 1 << "\n" ;
+        return ;
+    }
+    
+    ll l = *min_element(h.begin(), h.end()) ;
+    // binary search on answer
+    ll r = sum;
+    ll res=0 ;
+    while(l<=r){
+        ll mid = (l+r) >> 1 ;
+        if(check(h, mid)){
+            l = mid+1 ;
+            res = mid ;
+        }
+        else
+            r = mid-1 ;
+    }
+    
+    cout << res << "\n" ;
     return ;
 }
 
