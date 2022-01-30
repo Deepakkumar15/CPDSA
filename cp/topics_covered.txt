@@ -1,0 +1,5 @@
+1) two-pointers 
+2) bit-manipulation - max. cliques pending
+3) binary-search - ongoing
+4) MEX of array
+5) priority_queue - pending
