@@ -81,3 +81,9 @@ signed main(){
     return 0 ;
 }
 
+
+
+// for printing shortest path:
+// vi path ;
+// for(path.push_back(dest); dest != src; path.push_back(dest = parent[dest])) ;
+// reverse(path.begin(), path.end()) ;

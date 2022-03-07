@@ -1,3 +1,9 @@
+
+
+// PRINT ALL PATHS BETWEEN TWO NODES:
+
+// USING DFS:
+
 #include <bits/stdc++.h>
  
 using namespace std ;
@@ -25,7 +31,7 @@ using ordered_set = tree<c, null_type, cmp, rb_tree_tag, tree_order_statistics_n
 #define debug(x) cout << (#x) << " -> " << (x) << endl
 
 // Direction arrays
-ll dx[4] = {1, 0, 0, -1}; // DLRU
+ll dx[4] = {1, 0, 0, -1};
 ll dy[4] = {0, -1, 1, 0};
 ll dxx[] = { -1, -1, -1, 0, 0, 1, 1, 1 }; 
 ll dyy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -54,12 +60,43 @@ ll divide(ll a, ll b, ll p=mod) {
   return multiply(a % p, power(b, p - 2, p), p);
 }
 
-
+vi vis(10, 0) ;
+vi *adj ;
+void dfs(vi &src, ll par, ll dest){
+    ll curr = src.back() ;
+    // print the path
+    if(curr == dest){
+        for(auto it:src)
+            cout << it << " " ;
+        cout << endl ;
+    }
+    
+    for(auto it:adj[curr]){
+        if(!vis[it] && it != par){
+            vi new_src(src) ;
+            new_src.pb(it) ;
+            dfs(new_src, curr, dest) ;
+        }
+    }
+    
+    return ;
+}
 
 void solve(){
-    ll n ;
-    cin >> n ;
-
+    ll n, m;
+    cin >> n >> m;
+    adj = new vi [n+1] ;
+    while(m--){
+        ll x, y ;
+        cin >> x >> y ;
+        adj[x].pb(y) ;
+    }
+    
+    ll start, dest ;
+    cin >> start >> dest ;
+    vi src;
+    src.pb(start) ;
+    dfs(src, -1, dest) ;
     return ;
 }
 
@@ -69,10 +106,55 @@ signed main(){
     cout.tie(0) ;
 
     ll t=1;
-    cin >> t ;
+    // cin >> t ;
 
     while(t--)
         solve() ;
 
     return 0 ;
+}
+
+
+
+
+
+
+
+// USING BFS:
+
+vi vis(10, 0) ;
+vi *adj ;
+bool isVisited(vi &path, ll node){
+    // fn to check if we already visited the vertex or not
+    for(auto it : path)
+        if(it == node)
+            return true ;
+    return false ;
+}
+
+void bfs(vi &src, ll dest){
+    queue<vi> q ;
+    q.push(src) ;
+    
+    while(!q.empty()){
+        vi temp = q.front() ;
+        q.pop() ;
+        ll par = temp.back() ;
+        if(par == dest){
+            for(auto it:temp)
+                cout << it << " " ;
+            cout << endl ;
+        }
+        
+        for(auto it: adj[par]){
+            if(!isVisited(temp, it)){
+                vi new_src(temp) ;
+                new_src.pb(it) ;
+                q.push(new_src) ;
+            }
+        }
+        
+    }
+    
+    return ;
 }

@@ -9,6 +9,7 @@ template <class c, class cmp = less<c> >
 using ordered_set = tree<c, null_type, cmp, rb_tree_tag, tree_order_statistics_node_update>;
 
 #define ll  long long int
+#define ld  long double
 #define vi  vector<ll>
 #define vs  vector<string>
 #define vb  vector<bool>
@@ -18,10 +19,13 @@ using ordered_set = tree<c, null_type, cmp, rb_tree_tag, tree_order_statistics_n
 #define ff  first
 #define ss  second
 #define pb  push_back
+
+#define min_pair_heap  priority_queue<pi, vpi, greater<pi> >
+#define min_heap       priority_queue<ll, vi, greater<ll> >
 #define debug(x) cout << (#x) << " -> " << (x) << endl
 
 // Direction arrays
-ll dx[4] = {1, 0, 0, -1};
+ll dx[4] = {1, 0, 0, -1}; //DLRU
 ll dy[4] = {0, -1, 1, 0};
 ll dxx[] = { -1, -1, -1, 0, 0, 1, 1, 1 }; 
 ll dyy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -50,33 +54,59 @@ ll divide(ll a, ll b, ll p=mod) {
   return multiply(a % p, power(b, p - 2, p), p);
 }
 
+ll n, m;
+vs adj ;
+string ans; 
+string temp = "DLRU"; 
+bool bfs(pi src, pi dest, string path){
+    queue<pi> q ;
+    q.push(src) ;
+    
+    while(!q.empty()){
+        pi src = q.front() ;
+        q.pop() ;
+        if(src == dest){
+            ans = path ;
+            return true ;
+        }
 
+        for(ll i=0; i<4; i++){
+            ll x = src.ff + dx[i] ;
+            ll y = src.ss + dy[i] ;
+            if(x < 0 || x >= n || y < 0 || y >= m || adj[x][y] == '#')
+                continue ;
+            adj[src.ff][src.ss] = '#' ; // mark it as visited
+            q.push({x, y}) ;
+            path += temp[i] ;
+        }
+    }
+    return false ;
+}
 
 void solve(){
-    ll n, m, k;
-    cin >> n >> m >> k ;
-    
-    multiset<ll> s ;
-    vi room(m) ;
+    cin >> n >> m;
     for(ll i=0; i<n; i++){
-        ll x ;
-        cin >> x ;
-        s.insert(x) ;
+        string s ;
+        cin >> s ;
+        adj.pb(s) ;
     }
     
+    pi start, dest ;
     for(ll i=0; i<n; i++)
-        cin >> room[i] ;
-        
-    ll cnt=0 ;
-    for(ll i=0; i<m; i++){
-        auto it = s.lower_bound(room[i]) ;
-        if(room[i]<=*it+k && room[i]>=*it-k){
-            cnt++ ;
-            s.erase(it) ;
+        for(ll j=0; j<m; j++){
+            if(adj[i][j] == 'A')
+                start = {i, j} ;
+            if(adj[i][j] == 'B')
+                dest = {i, j} ;
         }
-    }   
-    
-    cout << cnt << endl ;
+        
+    string path;
+    if(bfs(start, dest, path)){
+        cout << "YES\n" << ans.size() << "\n" ;
+        cout << ans ;
+    }
+    else
+        cout << "NO\n" ;
     return ;
 }
 

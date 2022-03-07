@@ -39,21 +39,22 @@ public:
 			auto it = *(s.begin()) ;
 			s.erase(s.begin()) ;
 			
-			ll node = it.second ;
-			ll node_dist = it.first ;
+			ll par = it.second ;
+			ll par_dist = it.first ;
 			
-			for(auto nbr : adj[node]){
-			    ll v = nbr.first ;
-			    ll weight = nbr.second ;
-				if(node_dist + weight < dist[v]){
+			for(auto it : adj[par]){
+			    ll child = it.first ;
+			    ll child_dist = par_dist + it.second ;
+				if(child_dist < dist[child]){
 					// In set updation is not possible
 					// we have to remove the old pair and 
 					// insert a new pair instead
-					if(s.find({dist[v], v})!=s.end())
-						s.erase({dist[v], v}) ;
+					if(s.find({dist[child], child})!=s.end())
+						s.erase({dist[child], child}) ;
 					
-					dist[v] = node_dist + weight ;
-					s.insert({dist[v], v}) ;
+					dist[child] = child_dist;
+					s.insert({dist[child], child}) ;
+					parent[child] = par
 				}
 			}
 		}

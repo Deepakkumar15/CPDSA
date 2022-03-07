@@ -8,15 +8,15 @@ using namespace std ;
 #define ll long long int
 vector<ll> *l ;
 ll n ;
-ll rm=0, ri=0 ;
+ll max_dist = -INF, index = src
 
 void bfs(ll src){
     bool visited[n+1]={false};
     queue<ll> q ;
     q.push(src) ;
     visited[src]=true ;
-    ll level[n+1] ;
-    level[src]=0 ;
+    ll dist[n+1] ;
+    dist[src]=0 ;
     
     while(!q.empty()){
         ll node = q.front() ;
@@ -26,16 +26,18 @@ void bfs(ll src){
             if(!visited[it]){
                 visited[it]=true ;
                 q.push(it) ;
-                level[it]=level[node]+1 ;
+                dist[it]=dist[node]+1 ;
             }
         }
     }
     
+    
     for(ll i=1; i<=n; i++){
-            rm = max(rm, level[i]) ;
-            if(rm==level[i]) 
-                ri=i;
-        }    
+        if(dist[i] > max_dist){
+            max_dist = dist[i] ;
+            index = i ;
+        }
+    } 
         
 }
 

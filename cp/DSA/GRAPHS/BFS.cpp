@@ -17,28 +17,36 @@ public:
 	}
 
 	void bfs(T src){
-		map<T, bool> visited ;
+		vi parent(n), dist(n) ;
+		vi vis(n, false) ;
 		queue<T> q ;
 		q.push(src) ;
 
 		visited[src] = true ;
 
 		while(!q.empty()){
-			T node = q.front() ;
+			ll par = q.front() ;
 			q.pop() ;
-			cout << node << " " ;
+			cout << par << " " ;
 
-			for(int nbr : l[node]){
-				if(!visited[nbr]){
-					q.push(nbr) ;
+			for(auto it : adj[par]){
+				if(!visited[it]){
+					q.push(it) ;
 					// mark the neighbour as visited
-					visited[nbr] = true ;
+					visited[it] = true ;
+					dist[it] = dist[par]+1;
+					parent[it] = par ;
 				}
 			}
 		}
 	}
 
 };
+
+// for printing shortest path;
+// vi path ;
+// for(path.pb(dest); dest != src; path.pb(dest = parent[dest]))
+// reverse(path.begin(), path.end()) ;
 
 
 int main(){
