@@ -217,3 +217,127 @@ signed main(){
 
     return 0 ;
 }
+
+
+
+
+
+
+
+
+struct node{
+    ll descnt=0, user_id=-1 ;
+    ll parent = -1 ;
+    ll lock = 0; // for object level locking
+};
+
+bool check_node_lock(ll *lock){
+  ll resp = *lock ;
+  resp = 1 ;
+  return resp ;
+}
+
+bool check_and_update_ancestors(ll node){
+    ll ancestor = info[node].parent;
+    vector<ll> res;
+    for(; ancestor != -1; ancestor = info[ancestor].parent){
+        if(info[ancestor].user_id > 0){
+            info[ancestor].descnt++ ;
+        } else {
+            break;
+        }
+        res.push_back(ancestor);
+    }
+
+    if(ancestor != -1){
+        for(auto it : res){
+            info[it].descnt-- ;
+        }
+        return false;
+    }
+
+    return true;
+}
+
+bool lock_node(ll node, ll user_id){
+    while(info[node].lock){} ; // object level locking
+
+    if(info[node].user_id > 0)  // already locked
+        return false ;
+
+    bool update_resp = check_and_update_ancestors(node) ;
+    if(update_resp){
+        info[node].user_id = user_id ;
+    }
+    
+    info[node].lock = 0 ; // release the object level lock
+    return update_resp ;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// FINAL SOLUTION:
+
+
+struct node{
+    ll descnt=0, user_id=-1 ;
+    ll parent = -1 ;
+};
+
+
+bool check_and_update_ancestors(ll node){
+    ll ancestor = info[node].parent;
+    vector<ll> res;
+    for(; ancestor != -1; ancestor = info[ancestor].parent){
+        info[ancestor].descnt++ ;
+        if(info[ancestor].user_id != -1){
+            info[ancestor].descnt-- ;
+            break;
+        }
+        list.pb(ancestor);
+    }
+
+    if(ancestor != -1){
+        for(auto it : res){
+            info[it].descnt-- ;
+        }
+        return false;
+    }
+
+    return true;
+}
+
+
+bool lock_node(ll node, ll user_id){
+    // lock the node first
+  // if the node voilates the locking conditions, revert the changes
+    info[node].descnt++;
+    if(info[node].descnt > 1 || info[node].user_id != -1){
+        // already lock
+        info[node].descnt--;
+        return false;
+    }
+  
+    info[node].user_id = user_id ;
+    bool update_resp = check_and_update_ancestors(node) ;
+    if(!update_resp){
+        // revert the changes, mark the node unlocked
+        info[node].descnt--;
+        info[node].user_id = -1 ;
+        return false;
+    }
+    
+    return true ;
+}
