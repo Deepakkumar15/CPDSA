@@ -7,7 +7,8 @@ using namespace std ;
 using namespace __gnu_pbds;
 template <class c, class cmp = less<c> > 
 using ordered_set = tree<c, null_type, cmp, rb_tree_tag, tree_order_statistics_node_update>;
-
+// ordered_set<ll> s ; *s.find_by_order(k) -> returns kth indexed element starting from 0
+// s.order_of_key(k) -> return no. of element strictly less than k
 #define ll  long long int
 #define ld  long double
 #define vi  vector<ll>
