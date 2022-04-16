@@ -93,7 +93,7 @@ signed main(){
 using namespace std ;
 
 void lcs(string a, int n, string b, int m){
-    string ans ;
+    string ans = "";
     int dp[n+1][m+1] ;
     
     for(int i=0; i<=n; i++)
@@ -121,8 +121,8 @@ void lcs(string a, int n, string b, int m){
             j-- ;
     }
     
-    for(int it=ans.length()-1; it>=0; it--)
-        cout << ans[it] ;
+    reverse(ans.begin(), ans.end());
+    cout << ans << endl ;
 }
 
 signed main(){

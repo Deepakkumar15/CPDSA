@@ -89,3 +89,171 @@ signed main(){
     
     return 0 ;
 } 
+
+
+
+
+
+
+
+
+
+// N^3 SOLUTION:
+
+// dp[j] -> LCIS value if the LCIS end at b[j] (jth element of second array)
+
+void solve(){
+    ll n, m;
+    cin >> n ;
+    vi a(n) ;
+    for(ll i=0; i<n; i++)
+        cin >> a[i] ;
+    cin >> m ;
+    vi b(m) ;
+    for(ll i=0; i<m; i++)
+        cin >> b[i] ;
+        
+    vi dp(m, 0) ;
+    
+    for(ll i=0; i<n; i++){
+        for(ll j=0; j<m; j++){
+            if(a[i] == b[j]){
+                ll prev_max_lcis = 0 ;
+                for(ll k=j; k>=0; k--)
+                    if(b[k] < b[j])
+                        prev_max_lcis = max(prev_max_lcis, dp[k]) ;
+                
+                dp[j] = max(prev_max_lcis+1, dp[j]) ;
+                
+            }
+        }
+    }
+    
+    cout << *max_element(dp.begin(), dp.end()) ;
+    
+    return ;
+}
+
+
+
+
+// PRINTING OF LCIS: -> KEEP TRACK OF PREV ELEMENT AS WELL IN FROM OF PREV_IDX
+                        // I.E INDEX OF PREVIOUS ELEMENT IN LCIS
+
+void solve(){
+    ll n, m;
+    cin >> n ;
+    vi a(n) ;
+    for(ll i=0; i<n; i++)
+        cin >> a[i] ;
+    cin >> m ;
+    vi b(m), dp(m, 0), prev_idx(m, -1);
+    for(ll i=0; i<m; i++){
+        cin >> b[i] ;
+        prev_idx[i] = i ;
+    }
+        
+    
+    for(ll i=0; i<n; i++){
+        for(ll j=0; j<m; j++){
+            if(a[i] == b[j]){
+                ll prev_max_lcis = 0, idx = j;
+                for(ll k=j; k>=0; k--)
+                    if(b[k] < b[j] && prev_max_lcis < dp[k]){
+                        prev_max_lcis = dp[k] ;
+                        idx = k ;
+                    }
+                
+                if(prev_max_lcis+1 > dp[j]){
+                    dp[j] = prev_max_lcis+1;
+                    prev_idx[j] = idx ;
+                }
+                
+            }
+        }
+    }
+    
+    ll mx_idx = 0 ;
+    for(ll i=0; i<m; i++)
+        if(dp[i] > dp[mx_idx])
+            mx_idx = i ;
+    
+    cout << dp[mx_idx] << endl ;
+    
+    if(!dp[mx_idx])
+        return ;
+    
+    vi lcis ;
+    while(mx_idx != prev_idx[mx_idx]){
+        lcis.pb(b[mx_idx]);
+        mx_idx = prev_idx[mx_idx] ;
+    }
+    lcis.pb(b[mx_idx]) ;
+    
+    reverse(lcis.begin(), lcis.end()) ;
+    for(auto it:lcis)
+        cout << it << " " ;
+        
+    return ;
+}
+
+
+
+
+
+
+// N^2 SOLUTION: 
+
+
+void solve(){
+    ll n, m;
+    cin >> n ;
+    vi a(n) ;
+    for(ll i=0; i<n; i++)
+        cin >> a[i] ;
+    cin >> m ;
+    vi b(m), dp(m, 0), prev_idx(m, -1);
+    for(ll i=0; i<m; i++){
+        cin >> b[i] ;
+        prev_idx[i] = i ;
+    }
+        
+    
+    for(ll i=0; i<n; i++){
+        ll prev_max_lcis = 0, idx=-1;
+        for(ll j=0; j<m; j++){
+            if(a[i] == b[j] && prev_max_lcis + 1 > dp[j]){
+                dp[j] = prev_max_lcis + 1;
+                prev_idx[j] = idx ;
+            }
+            
+            if(b[j] < a[i] && prev_max_lcis < dp[j]){
+                prev_max_lcis = dp[j] ;
+                idx = j ;
+            }
+        }
+    }
+    
+    ll mx_idx = 0 ;
+    for(ll i=0; i<m; i++)
+        if(dp[i] > dp[mx_idx])
+            mx_idx = i ;
+    
+    cout << dp[mx_idx] << endl ;
+    
+    if(!dp[mx_idx])
+        return ;
+    
+    vi lcis ;
+    while(mx_idx != -1){
+        lcis.pb(b[mx_idx]);
+        mx_idx = prev_idx[mx_idx] ;
+    }
+    // lcis.pb(b[mx_idx]) ;
+    
+    reverse(lcis.begin(), lcis.end()) ;
+    for(auto it:lcis)
+        cout << it << " " ;
+        
+    return ;
+}
