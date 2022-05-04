@@ -1,13 +1,13 @@
 //MERGE SORT ALGORITHM (DIVIDE AND CONQUER ALGORITHM)
 //DIVIDE THE ARRAY INTO TWO , SORT AND THEN MERGE   
         
-void merge(int *arr, int l, int r, int mid){ // 2 4 5     3 1
+void merge(int *arr, int l, int r, int mid){ // 2 4 5     1 3
     vi temp ;
     
     int i=l, n = mid;
     int j = mid+1, m = r ;
     
-    // temp -> 1 2 
+    // temp -> 1 2 3 4 5  (final merging of both sorted arrays)
     while(i<=n && j<=m){
         if(arr[i] <= arr[j]){
             temp.push_back(arr[i]) ;

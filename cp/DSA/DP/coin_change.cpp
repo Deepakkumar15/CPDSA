@@ -124,7 +124,7 @@ signed main(){
 
 
 // min number of coins required to make the change of sum
-// 0(n) solution
+// 0(n) space solution
 #include <bits/stdc++.h>
  
 using namespace std ;

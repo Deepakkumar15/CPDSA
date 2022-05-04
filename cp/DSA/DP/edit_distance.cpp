@@ -37,3 +37,43 @@ for(ll i=0; i<=m; i++){
 }
 
 return dp[m][n] ;
+
+
+
+
+
+
+// RECURSION + MEMOIZATION
+
+class Solution {
+public:
+    int dp[505][505] ;
+    
+    Solution(){
+        for(int i=0; i<505; i++)
+            for(int j=0; j<505; j++)
+                dp[i][j] = -1 ;
+    }
+    
+    int fn(string t1, string t2, int n, int m){
+        if(m==0) return dp[n][m] = n ;
+        if(n==0) return dp[n][m] = m ;
+        
+        if(dp[n][m] != -1) return dp[n][m] ;
+        
+        if(t1[n-1] == t2[m-1])
+            return dp[n][m] = fn(t1, t2, n-1, m-1) ;
+        
+        else
+            return dp[n][m] = 1 + min(fn(t1, t2, n, m-1), min(fn(t1, t2, n-1, m), fn(t1, t2, n-1, m-1))) ;
+        
+        return dp[n][m] ;
+    }
+    
+    int minDistance(string word1, string word2) {
+        int n = word1.length();
+        int m = word2.length();
+        
+        return fn(word1, word2, n, m) ;
+    }
+};
