@@ -1,4 +1,4 @@
-// two pointer type implementation 
+// sliding window type implementation 
 // max consecutive 1's after atmost k flips
 
 #include <bits/stdc++.h>

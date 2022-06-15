@@ -1,3 +1,6 @@
+// CF LINK: https://codeforces.com/contest/1675/problem/D
+
+
 #include <bits/stdc++.h>
  
 using namespace std ;
@@ -56,7 +59,7 @@ ll divide(ll a, ll b, ll p=mod) {
 }
 
 vi *adj ;
-vi size(2e5+5, 1), heavy(2e5+5, 0) ;
+vi siz(2e5+5, 1), heavy(2e5+5, 0) ;
 map<ll, vi> mp ;
 
 void dfsH(ll src, ll chain, ll par){
@@ -81,8 +84,8 @@ void dfs(ll src, ll par){
     for(auto it: adj[src]){
         if(it != par){
             dfs(it, src) ;
-            size[src] += size[it] ;
-            if(size[it] >= size[heavy[src]])
+            siz[src] += siz[it] ;
+            if(siz[it] >= siz[heavy[src]])
                 heavy[src] = it ;
         }
     }    
@@ -94,7 +97,7 @@ void solve(){
     
     adj = new vi [n+2] ;
     for(ll i=0; i<=n; i++){
-        size[i] = 1 ;
+        siz[i] = 1 ;
         heavy[i] = 0 ;
     }
     
@@ -124,9 +127,9 @@ void solve(){
      
     cout << endl ;
     
-    size.clear() ; heavy.clear() ; mp.clear() ;
+    siz.clear() ; heavy.clear() ; mp.clear() ;
     
-    for(ll i=0; i<=n+1; i++)
+    for(ll i=0; i<=n; i++)
         adj[i].clear() ;
         
     return ;
