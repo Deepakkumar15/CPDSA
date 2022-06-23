@@ -72,16 +72,16 @@ void inorder(Node *root){
     Node *curr = root ;
     
     while(!s.empty() || curr){
-        if(curr){
+        while(curr){
             s.push(curr) ;
             curr = curr->left ;
         }
-        else{
-            curr = s.top() ;
-            s.pop() ;
-            cout << curr->data << " " ;
-            curr = curr->right ;
-        }
+        
+        curr = s.top() ;
+        s.pop() ;
+        cout << curr->data << " " ;
+        curr = curr->right ;
+        
     }
 }
 
