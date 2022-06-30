@@ -1,0 +1,100 @@
+how to approach the dsa/cp question: -> 
+
+1. check out the constraints first.
+2. find out the concept behind the question first.
+3. try to figure the logic then.
+	1. read the question carefully once again.
+	2. find out the observations.
+
+4. once you have found the logic completely. -> try to think some of the corner cases.
+5. last -> coding wala part.
+
+
+
+
+If input array is sorted then
+- Binary search
+- Two pointers
+
+If asked for all permutations/subsets then
+- Backtracking
+
+If given a tree then
+- DFS
+- BFS
+
+If given a graph then
+- DFS
+- BFS
+
+If given a linked list then
+- Two pointers
+
+If recursion is banned then
+- Stack
+
+If must solve in-place then
+- Swap corresponding values
+- Store one or more different values in the same pointer
+
+If asked for maximum/minimum subarray/subset/options then
+- Dynamic programming
+
+If asked for top/least K items then
+- Heap
+
+If asked for common strings then
+- Map
+- Trie
+
+Else
+- Map/Set for O(1) time & O(n) space
+- Sort input for O(nlogn) time and O(1) space
+
+
+
+
+
+
+
+dsa:
+1. binary tree.
+2. binary search trees
+
+
+
+
+
+
+
+
+cp:
+1. dp on trees.
+
+
+
+
+
+subject:
+1. read + notes -> concurrent transactions in dbms
+2. concurrency control in dbms.
+
+
+
+problems->
+1. not understanding the question properly 
+	-> that leads to missing some vital info.
+	-> going into wrong direction.
+
+
+
+
+current situation->
+solve b easily
+able to think c approx 70-75% but not able to complete it in almost half cases.
+
+
+
+
+solution ->
+practice C question more and more.
