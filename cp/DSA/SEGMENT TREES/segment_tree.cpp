@@ -64,3 +64,40 @@ signed main(){
     cout << sum_query(0, 7) << endl ;
     return 0 ;
 }
+
+
+
+
+
+
+
+
+// FOR CALCULATING MAX AND SECOND MAX IN THE GIVEN RANGE:
+
+void build(){ // FOR BUILDING THE SEGMENT TREE ARRAY
+    for(ll i=n-1; i>0; i--){
+        vi res{t[i<<1].ff, t[i<<1].ss, t[i<<1|1].ff, t[i<<1|1].ss} ;
+        sort(res.begin(), res.end(), greater<ll> ()) ;
+        t[i] = {res[0], res[1]};
+    }
+}
+
+pi query(ll l, ll r){ // FIND SUM IN A GIVEN RANGE
+    pi ans = {INT_MIN, INT_MIN} ;
+    for(l+=n, r+=n; l<=r; l>>=1, r>>=1){
+        if(l&1){ // IF L -> RIGHT CHILD
+            vi res1{ans.ff, ans.ss, t[l].ff, t[l].ss} ;
+            sort(res1.begin(), res1.end(), greater<ll> ()) ;
+            ans = {res1[0], res1[1]} ;
+            l++ ;
+        }
+        if(!(r&1)){ // IF R -> LEFT CHILD
+            vi res2{ans.ff, ans.ss, t[r].ff, t[r].ss} ;
+            sort(res2.begin(), res2.end(), greater<ll> ()) ;
+            ans = {res2[0], res2[1]} ;
+            r-- ;
+        }
+    }
+    
+    return ans ;
+}

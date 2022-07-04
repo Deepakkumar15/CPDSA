@@ -1,3 +1,5 @@
+// CSES PROBLEM LINK: https://cses.fi/problemset/task/1130
+
 #include <bits/stdc++.h>
  
 using namespace std ;
@@ -55,50 +57,31 @@ ll divide(ll a, ll b, ll p=mod) {
   return multiply(a % p, power(b, p - 2, p), p);
 }
 
-ll n ;
 vi *adj ;
+ll dp[N][2];
+vi subtree_ans(2e5+7, 0) ;
 
-
-vector<ll> subtree_size, dp ;
-ll tree_size = 1 ;
 
 void dfs(ll src, ll par){
     for(auto it : adj[src]){
         if(it != par){
             dfs(it, src) ;
-            // calculate the subtree size of the src node
-            subtree_size[src] += subtree_size[it] ;
-            // calculate ans for the subtree of src only
-            // contribution of the edge between parent and it's one of the childs
-            // -> distances_sum of child + subtree_size of the child
-            dp[src] += (subtree_size[it] + dp[it]) ;
+            subtree_ans[src] += max(dp[it][0], dp[it][1]) ;
+        }
+    }
+
+    ll child_ans_sum = subtree_ans[src] ;
+    for(auto it : adj[src]){
+        ll child_ans = max(dp[it][0], dp[it][1]) ; 
+        if(it != par){
+            dp[src][0] += child_ans ;
+            dp[src][1] = max(dp[src][1], (1 + (child_ans_sum - child_ans + dp[it][0]))) ;
         }
     }
 }
 
-void get_distances_sum(ll src, ll par){
-    // already calculated for root -> 0 in dfs fn as we made it the arbitrary node.
-    if(src != 1){
-        // now re-root the root from parent to it's child(src)
-        // child distance_sum = distance_sum(parent) - (remove the edge between parent and this child)
-        //                      + (make the child as root i.e change the edge now from child to parent)
-        //                      + (distance_sum of child)
-
-        // This is the main equation -> 
-        // dp[src] = dp[par] - (subtree_size[src] + dp[src]) + (subtree[par] - subtree[src]) + dp[src] 
-        dp[src] = dp[par] + subtree_size[par] - (2*subtree_size[src]) ;
-
-        // change the subtree_size of src -> bcoz it's the root of the tree now.
-        subtree_size[src] = tree_size ;
-    }
-    
-    for(auto it : adj[src])
-        if(it != par)
-            get_distances_sum(it, src) ;
-    
-}
-
 void solve(){
+    ll n ;
     cin >> n ;
 
     adj = new vi [n+1] ;
@@ -111,17 +94,13 @@ void solve(){
     }
 
     for(ll i=0; i<=n; i++){
-        subtree_size.push_back(1) ;
-        dp.push_back(0) ;
+        dp[i][0] = dp[i][1] = 0 ;
+        subtree_ans[i] = 0 ;
     }
 
     dfs(1, -1) ;
-    tree_size = n ;
-    
-    get_distances_sum(1, -1) ;
-    
-    for(ll i=1; i<=n; i++)
-        cout << dp[i] << " " ;    
+
+    cout << max(dp[1][0], dp[1][1]) << endl ;
     
     return ;
 }
