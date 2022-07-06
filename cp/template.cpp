@@ -32,7 +32,7 @@ ll dxx[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 ll dyy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
 const ll mod = 1e9+7 ;
-const ll N = 1e5+7 ;
+const ll N = 3e5+7 ;
 #define INF 1e9+7
 
 // Modular Exponentiation
@@ -55,12 +55,82 @@ ll divide(ll a, ll b, ll p=mod) {
   return multiply(a % p, power(b, p - 2, p), p);
 }
 
+ll n ;
+vi *adj ;
+vpi dp(2e5+7) ;
+
+void dfs(ll src, ll par){
+    ll mx_val = -1, sec_mx_val = -1;
+    for(auto it : adj[src]){
+        if(it != par){
+            dfs(it, src) ;
+            if(dp[it].ff >= mx_val){
+                sec_mx_val = mx_val ;
+                mx_val = dp[it].ff ;
+            }
+
+            else
+                sec_mx_val = max(sec_mx_val, dp[it].ff) ;
+        }
+    }
+    
+    dp[src] = {mx_val+1, sec_mx_val+1} ;
+}
+
+
+void get_mx_distance(ll src, ll par){
+    if(src != 1){
+        ll cmp_val = -1 ;
+        if(dp[par].ff == dp[src].ff+1){ 
+            // that means max. path distance of par exist through this child
+            // consider sec. max value of par in this case for comparison.
+            cmp_val = dp[par].ss + 1;
+        }
+
+        else{
+            // that means max. path distance of par exist through another child.
+            // consider max. value of par for comparison.
+            cmp_val = dp[par].ff + 1 ;            
+        }
+        
+        if(cmp_val >= dp[src].ff){
+            dp[src].ss = dp[src].ff ;
+            dp[src].ff = cmp_val ;
+        }
+        
+        else
+            dp[src].ss = max(dp[src].ss, cmp_val) ;
+    }
+
+    for(auto it : adj[src])
+        if(it != par)
+            get_mx_distance(it, src) ;
+
+} 
 
 
 void solve(){
-    ll n ;
     cin >> n ;
 
+    adj = new vi [n+1] ;
+
+    for(ll i=1; i<n; i++){
+        ll x, y ;
+        cin >> x >> y ;
+        adj[x].pb(y) ;
+        adj[y].pb(x) ;
+    }
+
+    for(ll i=0; i<=n; i++)
+        dp[i] = {0, 0} ;
+        
+    dfs(1, -1) ;
+        
+    get_mx_distance(1, -1) ;
+    
+    for(ll i=1; i<=n; i++)
+        cout << dp[i].ff << " "  ;
+    cout << endl ;
     return ;
 }
 
@@ -70,7 +140,7 @@ signed main(){
     cout.tie(0) ;
 
     ll t=1;
-    cin >> t ;
+    // cin >> t ;
 
     while(t--)
         solve() ;

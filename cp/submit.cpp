@@ -32,7 +32,7 @@ ll dxx[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 ll dyy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
 const ll mod = 1e9+7 ;
-const ll N = 2e5+7 ;
+const ll N = 3e5+7 ;
 #define INF 1e9+7
 
 // Modular Exponentiation
@@ -57,72 +57,80 @@ ll divide(ll a, ll b, ll p=mod) {
 
 ll n ;
 vi *adj ;
-
-
-vector<ll> subtree_size, dp ;
-ll tree_size = 1 ;
+vpi dp(2e5+7) ;
 
 void dfs(ll src, ll par){
+    ll mx_val = -1, sec_mx_val = -1;
     for(auto it : adj[src]){
         if(it != par){
             dfs(it, src) ;
-            // calculate the subtree size of the src node
-            subtree_size[src] += subtree_size[it] ;
-            // calculate ans for the subtree of src only
-            // contribution of the edge between parent and it's one of the childs
-            // -> distances_sum of child + subtree_size of the child
-            dp[src] += (subtree_size[it] + dp[it]) ;
+            if(dp[it].ff >= mx_val){
+                sec_mx_val = mx_val ;
+                mx_val = dp[it].ff ;
+            }
+
+            else
+                sec_mx_val = max(sec_mx_val, dp[it].ff) ;
         }
     }
+    
+    dp[src] = {mx_val+1, sec_mx_val+1} ;
 }
 
-void get_distances_sum(ll src, ll par){
-    // already calculated for root -> 0 in dfs fn as we made it the arbitrary node.
+
+void get_mx_distance(ll src, ll par){
     if(src != 1){
-        // now re-root the root from parent to it's child(src)
-        // child distance_sum = distance_sum(parent) - (remove the edge between parent and this child)
-        //                      + (make the child as root i.e change the edge now from child to parent)
-        //                      + (distance_sum of child)
+        ll cmp_val = -1 ;
+        if(dp[par].ff == dp[src].ff+1){ 
+            // that means max. path distance of par exist through this child
+            // consider sec. max value of par in this case for comparison.
+            cmp_val = dp[par].ss + 1;
+        }
 
-        // This is the main equation -> 
-        // dp[src] = dp[par] - (subtree_size[src] + dp[src]) + (subtree[par] - subtree[src]) + dp[src] 
-        dp[src] = dp[par] + subtree_size[par] - (2*subtree_size[src]) ;
-
-        // change the subtree_size of src -> bcoz it's the root of the tree now.
-        subtree_size[src] = tree_size ;
+        else{
+            // that means max. path distance of par exist through another child.
+            // consider max. value of par for comparison.
+            cmp_val = dp[par].ff + 1 ;            
+        }
+        
+        if(cmp_val >= dp[src].ff){
+            dp[src].ss = dp[src].ff ;
+            dp[src].ff = cmp_val ;
+        }
+        
+        else
+            dp[src].ss = max(dp[src].ss, cmp_val) ;
     }
-    
+
     for(auto it : adj[src])
         if(it != par)
-            get_distances_sum(it, src) ;
-    
-}
+            get_mx_distance(it, src) ;
+
+} 
+
 
 void solve(){
     cin >> n ;
 
     adj = new vi [n+1] ;
 
-    for(ll i=2; i<=n; i++){
+    for(ll i=1; i<n; i++){
         ll x, y ;
-        cin >> x >> y;
+        cin >> x >> y ;
         adj[x].pb(y) ;
         adj[y].pb(x) ;
     }
 
-    for(ll i=0; i<=n; i++){
-        subtree_size.push_back(1) ;
-        dp.push_back(0) ;
-    }
-
+    for(ll i=0; i<=n; i++)
+        dp[i] = {0, 0} ;
+        
     dfs(1, -1) ;
-    tree_size = n ;
-    
-    get_distances_sum(1, -1) ;
+        
+    get_mx_distance(1, -1) ;
     
     for(ll i=1; i<=n; i++)
-        cout << dp[i] << " " ;    
-    
+        cout << dp[i].ff << " "  ;
+    cout << endl ;
     return ;
 }
 
