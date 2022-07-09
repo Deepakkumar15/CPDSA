@@ -1,3 +1,7 @@
+// PROBLEM LINK: - https://www.spoj.com/problems/HOLI/
+// PIGEON HOLE PRINCIPLE OR TREE CENTROIDS CONCEPT
+
+
 #include <bits/stdc++.h>
  
 using namespace std ;
@@ -67,14 +71,16 @@ void dfs(ll src, ll par){
             // add the subtree child size into par
             subtree_size[src] += subtree_size[it.ff] ;
             // calculate this edge contribution
-            edge_contribution += (2*(subtree_size[it])*(it.ss)) ; 
+            edge_contribution += (2*(min(n-subtree_size[it.ff], subtree_size[it.ff]))*(it.ss)) ; 
         }
     }
 }
 
 void solve(){
     cin >> n ;
-
+    
+    adj = new vpi [n+1] ;
+    
     edge_contribution = 0 ;
     for(ll i=0; i<=n; i++){
         adj[i].clear() ;
@@ -90,7 +96,7 @@ void solve(){
 
     dfs(1, -1) ;
 
-    cout << "Case #" << tc++ << ": " << edge_contribution << "\n" ;
+    cout << "Case #" << ++tc << ": " << edge_contribution << "\n" ;
     
     return ;
 }
