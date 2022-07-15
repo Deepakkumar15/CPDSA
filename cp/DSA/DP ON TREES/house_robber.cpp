@@ -38,3 +38,27 @@ public:
         return max(dp[{root, 1}], dp[{root, 0}]) ;
     }
 };
+
+
+
+
+
+
+
+
+
+
+// for general tree
+
+void dfs(ll src, ll par){
+    ll sum1=0, sum2=0 ;
+    for(auto it : adj[src])
+        if(it != par){
+            dfs(it, src) ;
+            sum1 += dp[it][0] ;
+            sum2 += max(dp[it][0], dp[it][1]) ;
+        }
+
+    dp[src][0] = sum2 ;
+    dp[src][1] = node[src] + sum1 ;
+}
