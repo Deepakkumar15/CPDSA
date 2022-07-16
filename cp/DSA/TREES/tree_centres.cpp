@@ -57,3 +57,75 @@ public:
         return centres;
     }
 };
+
+
+
+
+
+
+
+
+
+
+ll n ;
+vi *adj;
+
+vi find_centroids_of_tree(vi &degree){
+    queue<ll> q ;
+    for(ll i=1; i<=n; i++){
+        if(degree[i] == 1){
+            q.push(i) ;
+            degree[i]-- ;
+        }
+    }
+        
+    vi centroids ;
+    while(!q.empty()){
+        ll sz = q.size() ;
+        centroids.clear();
+        
+        while(sz--){
+            ll par = q.front() ;
+            q.pop() ;
+            centroids.pb(par) ;
+            
+            for(auto it : adj[par]){
+                if(--degree[it] == 1)
+                    q.push(it) ;
+            }
+        }
+    }
+    
+    return centroids ;
+    
+}
+
+void solve(){
+    cin >> n ;
+
+    adj = new vi [n+1] ;
+    vi degree(n+1, 0) ;
+    
+    for(ll i=0; i<=n; i++){
+        adj[i].clear() ;
+        degree[i] = 0 ;
+    }
+
+
+    for(ll i=1; i<n; i++){
+        ll x, y;
+        cin >> x >> y ;
+        adj[x].push_back(y) ;
+        adj[y].push_back(x) ;
+        degree[x]++;
+        degree[y]++ ;
+    }
+
+    vi centroids = find_centroids_of_tree(degree) ;
+    
+    for(auto it : centroids)
+        cout << it << " " ;
+    cout << endl ;
+    
+    return ;
+}
