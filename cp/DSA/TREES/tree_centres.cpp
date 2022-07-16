@@ -1,4 +1,4 @@
-// FIND CENTROIDS OF THE TREE
+// FIND CENTRES OF THE TREE
 // PROBLEM LINK: https://leetcode.com/problems/minimum-height-trees/submissions/
 
 #define ll int
@@ -7,7 +7,7 @@ class Solution {
 public:
     vector<ll> *adj ;
     
-    vector<ll> find_centroids_of_tree(vector<ll> &degree, ll n){
+    vector<ll> find_centres_of_tree(vector<ll> &degree, ll n){
         queue<ll> q ;
         for(ll i=0; i<n; i++)
             if(degree[i] == 1){
@@ -16,15 +16,15 @@ public:
             }
         
         // do multisource bfs from every leaf node & reduce their degree
-        vector<ll> centroids ;
+        vector<ll> centres ;
         while(!q.empty()){
             ll sz = q.size() ;
-            centroids.clear() ;
+            centres.clear() ;
             
             while(sz--){
                 ll par = q.front() ;
                 q.pop() ;
-                centroids.push_back(par) ;
+                centres.push_back(par) ;
                 
                 for(auto it : adj[par]){
                     if(--degree[it] == 1){ // it will be new leaf now
@@ -34,7 +34,7 @@ public:
             }
         }
         
-        return centroids ;
+        return centres ;
     }
     
     vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
@@ -52,8 +52,8 @@ public:
             return {0} ;    
         }
         
-        vector<ll> centroids = find_centroids_of_tree(degree, n) ;
+        vector<ll> centres = find_centres_of_tree(degree, n) ;
         
-        return centroids;
+        return centres;
     }
 };

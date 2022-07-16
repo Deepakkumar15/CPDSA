@@ -56,81 +56,65 @@ ll divide(ll a, ll b, ll p=mod) {
 }
 
 ll n ;
-vi *adj ;
-vpi dp(2e5+7) ;
+vi *adj;
 
-void dfs(ll src, ll par){
-    ll mx_val = -1, sec_mx_val = -1;
-    for(auto it : adj[src]){
-        if(it != par){
-            dfs(it, src) ;
-            if(dp[it].ff >= mx_val){
-                sec_mx_val = mx_val ;
-                mx_val = dp[it].ff ;
+vi find_centroids_of_tree(vi &degree){
+    queue<ll> q ;
+    for(ll i=1; i<=n; i++){
+        if(degree[i] == 1){
+            q.push(i) ;
+            degree[i]-- ;
+        }
+    }
+        
+    vi centroids ;
+    while(!q.empty()){
+        ll sz = q.size() ;
+        centroids.clear();
+        
+        while(sz--){
+            ll par = q.front() ;
+            q.pop() ;
+            centroids.pb(par) ;
+            
+            for(auto it : adj[par]){
+                if(--degree[it] == 1)
+                    q.push(it) ;
             }
-
-            else
-                sec_mx_val = max(sec_mx_val, dp[it].ff) ;
         }
     }
     
-    dp[src] = {mx_val+1, sec_mx_val+1} ;
+    return centroids ;
+    
 }
-
-
-void get_mx_distance(ll src, ll par){
-    if(src != 1){
-        ll cmp_val = -1 ;
-        if(dp[par].ff == dp[src].ff+1){ 
-            // that means max. path distance of par exist through this child
-            // consider sec. max value of par in this case for comparison.
-            cmp_val = dp[par].ss + 1;
-        }
-
-        else{
-            // that means max. path distance of par exist through another child.
-            // consider max. value of par for comparison.
-            cmp_val = dp[par].ff + 1 ;            
-        }
-        
-        if(cmp_val >= dp[src].ff){
-            dp[src].ss = dp[src].ff ;
-            dp[src].ff = cmp_val ;
-        }
-        
-        else
-            dp[src].ss = max(dp[src].ss, cmp_val) ;
-    }
-
-    for(auto it : adj[src])
-        if(it != par)
-            get_mx_distance(it, src) ;
-
-} 
-
 
 void solve(){
     cin >> n ;
 
     adj = new vi [n+1] ;
-
-    for(ll i=1; i<n; i++){
-        ll x, y ;
-        cin >> x >> y ;
-        adj[x].pb(y) ;
-        adj[y].pb(x) ;
+    vi degree(n+1, 0) ;
+    
+    for(ll i=0; i<=n; i++){
+        adj[i].clear() ;
+        degree[i] = 0 ;
     }
 
-    for(ll i=0; i<=n; i++)
-        dp[i] = {0, 0} ;
-        
-    dfs(1, -1) ;
-        
-    get_mx_distance(1, -1) ;
+
+    for(ll i=1; i<n; i++){
+        ll x, y;
+        cin >> x >> y ;
+        adj[x].push_back(y) ;
+        adj[y].push_back(x) ;
+        degree[x]++;
+        degree[y]++ ;
+    }
+
+    vi centroids = find_centroids_of_tree(degree) ;
     
-    for(ll i=1; i<=n; i++)
-        cout << dp[i].ff << " "  ;
+    for(auto it : centroids)
+        cout << it << " " ;
     cout << endl ;
+    
     return ;
 }
 
